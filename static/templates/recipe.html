@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/recipe.js') }}"></script>
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/recipe.css') }}" />
+    <title>Recipe</title>
+</head>
+<body>
+<div>
+{% for c in cravings %}
+<span class="filter craving_filter">{{ c }}</span>
+{% endfor %}
+</div>
+<div>
+{% for s in stations %}
+<span class="filter station_filter">{{ s }}</span>
+{% endfor %}
+</div>
+<div>
+<table class="recipe">
+<thead>
+<tr>
+    <th></th>
+    <th>id</th>
+    <th>name</th>
+    <th>station</th>
+    <th colspan="4">coin</th>
+    <th>dish</th>
+    <th colspan="4">coin+</th>
+    <th>ingredients</th>
+</tr>
+<tr>
+    <th colspan="4"></th>
+    {% for i in range(1,5) %}
+    <th class="filter coin" cointype="{{ i }}"><img src="{{ url_for('static', filename='images/quagmire/coin/%d.png' % i) }}" /></th>
+    {% endfor %}
+    <th></th>
+    {% for i in range(1,5) %}
+    <th class="filter silver_coin" cointype="{{ i }}"><img src="{{ url_for('static', filename='images/quagmire/coin/%d.png' % i) }}" /></th>
+    {% endfor %}
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{% for item in recipe %}
+    {% set cravings = item['cravings'] %}
+    {% if cravings is none %}
+        {% set cravings = [] %}
+    {% endif %}
+    {% set stations = item['station'] %}
+    {% if stations is none %}
+        {% set stations = [] %}
+    {% endif %}
+    <tr class="dish {{  ' '.join(cravings) }} {{ ' '.join(stations) }}">
+        <td><img src="{{ item['image'] }}" /></td>
+        <td>{{ item['id'] }}</td>
+        <td>{{ item['name'] }}</td>
+        <td>{{ ','.join(item['station']) }}</td>
+        {% for j in item['coins'] %}
+            <td class="coin" cointype="{{ loop.index }}">{% if j > 0 %}{{ j }}{% endif %}</td>
+        {% endfor %}
+        <td>
+            <img class="dish" src="{{ url_for('static', filename='images/quagmire/%s.png' % item['dish']) }}" />
+        </td>
+        {% for j in item['silver_coins'] %}
+            <td class="silver_coin" cointype="{{ loop.index }}">{% if j > 0 %}{{ j }}{% endif %}</td>
+        {% endfor %}
+        <td>
+            <table>
+            {% for ingredients in item['ingredients'] %}
+                <tr>
+                    {% for ingredient in ingredients %}
+                        {% if ingredient.startswith('quagmire_') %}
+                            {% set ingredient = ingredient[9:] %}
+                        {% endif %}
+                        {% if ingredient.endswith('_cooked') %}
+                            {% set ingredient = ingredient[:-7] %}
+                        {% endif %}
+                        {% if ingredient.startswith('cooked') %}
+                            {% set ingredient = ingredient[6:] %}
+                        {% endif %}
+                        <td>
+                            <img class="ingredient" src="{{ url_for('static', filename='images/quagmire/%s.png' % ingredient) }}" />
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </table>
+        </td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</body>
+</html>
