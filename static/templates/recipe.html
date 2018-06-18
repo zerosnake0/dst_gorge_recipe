@@ -37,11 +37,17 @@
 <tr>
     <th colspan="4"></th>
     {% for i in range(1,5) %}
-    <th class="filter coin" cointype="{{ i }}"><img src="{{ url_for('static', filename='images/quagmire/coin/%d.png' % i) }}" /></th>
+    <th class="filter coin" data-cointype="{{ i }}">
+        <img alt="coin{{ i }}"
+             src="{{ url_for('static', filename='images/quagmire/coin/%d.png' % i) }}" />
+    </th>
     {% endfor %}
     <th></th>
     {% for i in range(1,5) %}
-    <th class="filter silver_coin" cointype="{{ i }}"><img src="{{ url_for('static', filename='images/quagmire/coin/%d.png' % i) }}" /></th>
+    <th class="filter silver_coin" data-cointype="{{ i }}">
+        <img alt="silver_coin{{ i }}"
+             src="{{ url_for('static', filename='images/quagmire/coin/%d.png' % i) }}" />
+    </th>
     {% endfor %}
     <th></th>
 </tr>
@@ -57,23 +63,24 @@
         {% set stations = [] %}
     {% endif %}
     <tr class="dish {{  ' '.join(cravings) }} {{ ' '.join(stations) }}">
-        <td><img src="{{ item['image'] }}" /></td>
+        <td><img alt="{{ item['image'] }}"
+                 src="{{ item['image'] }}" /></td>
         <td>{{ item['id'] }}</td>
         <td>{{ item['name'] }}</td>
         <td>{{ ','.join(item['station']) }}</td>
         {% for j in item['coins'] %}
-            <td class="coin" cointype="{{ loop.index }}">{% if j > 0 %}{{ j }}{% endif %}</td>
+            <td class="coin" data-cointype="{{ loop.index }}">{% if j > 0 %}{{ j }}{% endif %}</td>
         {% endfor %}
         <td>
-            <img class="dish" src="{{ url_for('static', filename='images/quagmire/%s.png' % item['dish']) }}" />
+            <img class="dish" alt="{{ item['dish'] }}"
+                 src="{{ url_for('static', filename='images/quagmire/dish/%s.png' % item['dish']) }}" />
         </td>
         {% for j in item['silver_coins'] %}
-            <td class="silver_coin" cointype="{{ loop.index }}">{% if j > 0 %}{{ j }}{% endif %}</td>
+            <td class="silver_coin" data-cointype="{{ loop.index }}">{% if j > 0 %}{{ j }}{% endif %}</td>
         {% endfor %}
         <td>
-            <table>
             {% for ingredients in item['ingredients'] %}
-                <tr>
+                <div class="ingredients">
                     {% for ingredient in ingredients %}
                         {% if ingredient.startswith('quagmire_') %}
                             {% set ingredient = ingredient[9:] %}
@@ -84,13 +91,12 @@
                         {% if ingredient.startswith('cooked') %}
                             {% set ingredient = ingredient[6:] %}
                         {% endif %}
-                        <td>
-                            <img class="ingredient" src="{{ url_for('static', filename='images/quagmire/%s.png' % ingredient) }}" />
-                        </td>
+
+                            <img class="ingredient" alt="{{ ingredient }}"
+                                 src="{{ url_for('static', filename='images/quagmire/%s.png' % ingredient) }}" />
                     {% endfor %}
-                </tr>
+                </div>
             {% endfor %}
-            </table>
         </td>
     </tr>
 {% endfor %}

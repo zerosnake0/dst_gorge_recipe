@@ -2,8 +2,8 @@ $(function() {
     function refilter() {
         craving = $(".craving_filter.chosen").text()
         station = $(".station_filter.chosen").text()
-        coin = $("th.coin.chosen").attr("cointype")
-        silver_coin = $("th.silver_coin.chosen").attr("cointype")
+        coin = $("th.coin.chosen").attr("data-cointype")
+        silver_coin = $("th.silver_coin.chosen").attr("data-cointype")
         $("tr.dish").each(function(index){
             if (craving != '' && !$(this).hasClass(craving)) {
                 $(this).hide()
@@ -14,14 +14,14 @@ $(function() {
                 return
             }
             if (coin != null) {
-                let nc = $(this).find("td.coin[cointype='" + coin + "']").text()
+                let nc = $(this).find("td.coin[data-cointype='" + coin + "']").text()
                 if (nc == '') {
                     $(this).hide()
                     return
                 }
             }
             if (silver_coin != null) {
-                let nc = $(this).find("td.silver_coin[cointype='" + silver_coin + "']").text()
+                let nc = $(this).find("td.silver_coin[data-cointype='" + silver_coin + "']").text()
                 if (nc == '') {
                     $(this).hide()
                     return

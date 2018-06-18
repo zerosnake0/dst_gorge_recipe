@@ -35,7 +35,8 @@ class Recipe(View):
         if cls.recipe is not None:
             try:
                 with open(cls.recipe_json_path(), 'w') as f:
-                    json.dump(cls.recipe, f)
+                    json.dump(cls.recipe, f, sort_keys=True,
+                              separators=(',', ';'))
                 print('recipe saved')
             except Exception as e:
                 print("Unable to save recipe: %s" % e)
